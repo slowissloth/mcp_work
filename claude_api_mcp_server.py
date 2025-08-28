@@ -283,22 +283,22 @@ CPU: {cpu_count} 코어, 사용률: {cpu_percent}%
             for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent', 'status']):
                 try:
                     processes.append({
-                        'pid': proc.info['pid'],
-                        'name': proc.info['name'],
-                        'cpu_percent': proc.info['cpu_percent'],
-                        'memory_percent': proc.info['memory_percent'],
-                        'status': proc.info['status']
+                        'pid': proc.info['pid'] or 0,
+                        'name': proc.info['name'] or 'Unknown',
+                        'cpu_percent': proc.info['cpu_percent'] or 0.0,
+                        'memory_percent': proc.info['memory_percent'] or 0.0,
+                        'status': proc.info['status'] or 'Unknown'
                     })
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     continue
             
-            # 정렬
+            # 정렬 (None 값 처리)
             if sort_by == "cpu":
-                processes.sort(key=lambda x: x['cpu_percent'], reverse=True)
+                processes.sort(key=lambda x: x['cpu_percent'] or 0.0, reverse=True)
             elif sort_by == "memory":
-                processes.sort(key=lambda x: x['memory_percent'], reverse=True)
+                processes.sort(key=lambda x: x['memory_percent'] or 0.0, reverse=True)
             elif sort_by == "name":
-                processes.sort(key=lambda x: x['name'].lower())
+                processes.sort(key=lambda x: (x['name'] or '').lower())
             
             # 상위 프로세스만 선택
             processes = processes[:max_processes]
@@ -308,7 +308,9 @@ CPU: {cpu_count} 코어, 사용률: {cpu_percent}%
             result += "-" * 50 + "\n"
             
             for proc in processes:
-                result += f"{proc['pid']}\t{proc['name']}\t{proc['cpu_percent']:.1f}\t{proc['memory_percent']:.1f}\t{proc['status']}\n"
+                cpu_percent = proc['cpu_percent'] or 0.0
+                memory_percent = proc['memory_percent'] or 0.0
+                result += f"{proc['pid']}\t{proc['name']}\t{cpu_percent:.1f}\t{memory_percent:.1f}\t{proc['status']}\n"
             
             result += f"\n총 {len(processes)}개 프로세스 표시됨"
             return result
