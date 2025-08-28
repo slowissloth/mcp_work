@@ -10,7 +10,7 @@ from typing import Dict, Any
 class ClaudeAPIMCPClient:
     """Claude API MCP 서버 클라이언트"""
     
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8005"):
         self.base_url = base_url
         self.session = requests.Session()
     
