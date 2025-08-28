@@ -143,7 +143,7 @@ async def startup_event():
     
     # Claude 클라이언트 초기화
     try:
-        claude_client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+        claude_client = anthropic.Anthropic(api_key=config.load_api_key())
         logger.info("Claude API 클라이언트가 초기화되었습니다.")
     except Exception as e:
         logger.error(f"Claude API 클라이언트 초기화 실패: {e}")
