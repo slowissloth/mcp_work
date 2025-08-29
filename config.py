@@ -1,6 +1,7 @@
 """
 Claude API MCP 서버 설정
 """
+# Claude API MCP 서버 설정 파일
 
 import os
 from dotenv import load_dotenv
